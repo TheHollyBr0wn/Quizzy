@@ -1,0 +1,33 @@
+<?php
+	// values typed and stored on register.php
+	$email = $_POST['mail'];
+	$name = $_POST['name'];
+	$password = $_POST['pass'];
+	$checkP = $_POST['Cpass'];
+
+	// to prevent mysql injection
+	$email = stripcslashes($email);
+	$name = stripcslashes($name);
+	$password = stripcslashes($password);
+	$checkP = stripcslashes($checkP);
+
+	$email = mysql_real_escape_string($email);
+	$name = mysql_real_escape_string($name);
+	$password = mysql_real_escape_string($password);
+	$checkP = mysql_real_escape_string($checkP);
+
+	// connect to server in data base
+	$conn = mysqli_connect("localhost", "root", "");
+	mysqli_select_db($conn, accounts);
+
+	// query the database for the user
+	$Queri = mysqli_query($conn, "select * from accounts where email = '$email' and password = $pass")
+		or die ("failed to query". mysqli_connect_error());
+	$result = mysqli_fetch_array($Queri);
+
+	if ($result["email"] == $email && $result["password"] == $pass){
+		echo "log in success".$result["name"];
+	}else{
+		echo "Failed to login";
+	}
+?>
